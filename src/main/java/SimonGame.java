@@ -1,144 +1,144 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
+import javax.swing.*; // Import Swing library for GUI components
+import java.awt.*; // Import AWT library for basic window and graphics
+import java.awt.event.ActionEvent; // Import ActionEvent for handling button clicks
+import java.awt.event.ActionListener; // Import ActionListener for button click events
+import java.util.ArrayList; // Import ArrayList for dynamic list of buttons
+import java.util.List; // Import List interface for list operations
 
-public class SimonGame extends JFrame {
-    private SimonLogic gameLogic;
-    private JButton startButton;
-    private JLabel currentScoreLabel;
-    private JTextArea scoreHistoryArea;
-    private JPanel buttonPanel;
-    private List<JButton> colorButtons;
-    private JTextField nameField;
+public class SimonGame extends JFrame { // Main class for the Simon game, extending JFrame for the window
+    private SimonLogic gameLogic; // Instance of the game logic class
+    private JButton startButton; // Button to start the game
+    private JLabel currentScoreLabel; // Label to display the current score
+    private JTextArea scoreHistoryArea; // Text area to display score history
+    private JPanel buttonPanel; // Panel to hold the color buttons
+    private List<JButton> colorButtons; // List to store the color buttons
+    private JTextField nameField; // Text field for the player to enter their name
 
-    public SimonGame() {
-        setTitle("Simon Game");
-        setSize(500, 500); // Adjusted size for better layout
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+    public SimonGame() { // Constructor for the SimonGame class
+        setTitle("Simon Game"); // Set the title of the window
+        setSize(500, 500); // Set the size of the window (width, height)
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close the application when the window is closed
+        setLayout(new BorderLayout()); // Use BorderLayout for the main layout
 
-        gameLogic = new SimonLogic(this);
+        gameLogic = new SimonLogic(this); // Initialize the game logic with a reference to this GUI
 
         // Name Input Field
-        JPanel namePanel = new JPanel();
-        namePanel.add(new JLabel("Enter your name: "));
-        nameField = new JTextField(15);
-        namePanel.add(nameField);
+        JPanel namePanel = new JPanel(); // Create a panel for the name input
+        namePanel.add(new JLabel("Enter your name: ")); // Add a label to the panel
+        nameField = new JTextField(15); // Create a text field for the player's name
+        namePanel.add(nameField); // Add the text field to the panel
 
         // Start Button
-        startButton = new JButton("Start Game");
-        startButton.addActionListener(new ActionListener() {
+        startButton = new JButton("Start Game"); // Create the start button
+        startButton.addActionListener(new ActionListener() { // Add an action listener to the button
             @Override
-            public void actionPerformed(ActionEvent e) {
-                String playerName = nameField.getText().trim();
-                if (playerName.isEmpty()) {
-                    JOptionPane.showMessageDialog(SimonGame.this, "Please enter your name!");
+            public void actionPerformed(ActionEvent e) { // Define what happens when the button is clicked
+                String playerName = nameField.getText().trim(); // Get the player's name from the text field
+                if (playerName.isEmpty()) { // Check if the name is empty
+                    JOptionPane.showMessageDialog(SimonGame.this, "Please enter your name!"); // Show an error message
                 } else {
-                    gameLogic.startGame();
+                    gameLogic.startGame(); // Start the game if the name is provided
                 }
             }
         });
 
         // Current Score Label
-        currentScoreLabel = new JLabel("Current Score: 0", SwingConstants.CENTER);
-        currentScoreLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        currentScoreLabel = new JLabel("Current Score: 0", SwingConstants.CENTER); // Create a label for the current score
+        currentScoreLabel.setFont(new Font("Arial", Font.BOLD, 20)); // Set the font for the label
 
         // Score History Area
-        scoreHistoryArea = new JTextArea();
-        scoreHistoryArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(scoreHistoryArea);
+        scoreHistoryArea = new JTextArea(); // Create a text area for the score history
+        scoreHistoryArea.setEditable(false); // Make the text area read-only
+        JScrollPane scrollPane = new JScrollPane(scoreHistoryArea); // Add a scroll pane to the text area
 
         // Color Buttons (smaller size)
-        buttonPanel = new JPanel(new GridLayout(2, 2, 10, 10)); // Added gaps between buttons
-        colorButtons = new ArrayList<>();
-        String[] colors = {"Red", "Green", "Blue", "Yellow"};
-        Color[] buttonColors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
-        for (int i = 0; i < colors.length; i++) {
-            JButton button = new JButton(colors[i]);
-            button.setBackground(buttonColors[i]);
-            button.setOpaque(true);
-            button.setBorderPainted(false);
-            button.setFont(new Font("Arial", Font.BOLD, 18)); // Smaller font for buttons
-            button.setPreferredSize(new Dimension(100, 100)); // Smaller button size
-            int finalI = i;
-            button.addActionListener(new ActionListener() {
+        buttonPanel = new JPanel(new GridLayout(2, 2, 10, 10)); // Create a panel with a 2x2 grid layout and gaps
+        colorButtons = new ArrayList<>(); // Initialize the list of color buttons
+        String[] colors = {"Red", "Green", "Blue", "Yellow"}; // Array of button colors
+        Color[] buttonColors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW}; // Array of corresponding colors
+        for (int i = 0; i < colors.length; i++) { // Loop through the colors
+            JButton button = new JButton(colors[i]); // Create a button for each color
+            button.setBackground(buttonColors[i]); // Set the button's background color
+            button.setOpaque(true); // Make the button opaque
+            button.setBorderPainted(false); // Remove the button border
+            button.setFont(new Font("Arial", Font.BOLD, 18)); // Set the font for the button
+            button.setPreferredSize(new Dimension(100, 100)); // Set the preferred size of the button
+            int finalI = i; // Store the current index for the action listener
+            button.addActionListener(new ActionListener() { // Add an action listener to the button
                 @Override
-                public void actionPerformed(ActionEvent e) {
-                    gameLogic.checkUserInput(colors[finalI]);
+                public void actionPerformed(ActionEvent e) { // Define what happens when the button is clicked
+                    gameLogic.checkUserInput(colors[finalI]); // Check the user's input against the game logic
                 }
             });
-            colorButtons.add(button);
-            buttonPanel.add(button);
+            colorButtons.add(button); // Add the button to the list
+            buttonPanel.add(button); // Add the button to the panel
         }
 
         // Add components to the frame
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(namePanel, BorderLayout.NORTH);
-        topPanel.add(startButton, BorderLayout.SOUTH);
+        JPanel topPanel = new JPanel(new BorderLayout()); // Create a panel for the top section
+        topPanel.add(namePanel, BorderLayout.NORTH); // Add the name panel to the top
+        topPanel.add(startButton, BorderLayout.SOUTH); // Add the start button below the name panel
 
-        JPanel centerPanel = new JPanel(new BorderLayout());
-        centerPanel.add(currentScoreLabel, BorderLayout.NORTH);
-        centerPanel.add(buttonPanel, BorderLayout.CENTER);
+        JPanel centerPanel = new JPanel(new BorderLayout()); // Create a panel for the center section
+        centerPanel.add(currentScoreLabel, BorderLayout.NORTH); // Add the score label to the top
+        centerPanel.add(buttonPanel, BorderLayout.CENTER); // Add the button panel to the center
 
-        add(topPanel, BorderLayout.NORTH);
-        add(centerPanel, BorderLayout.CENTER);
-        add(scrollPane, BorderLayout.SOUTH);
+        add(topPanel, BorderLayout.NORTH); // Add the top panel to the frame
+        add(centerPanel, BorderLayout.CENTER); // Add the center panel to the frame
+        add(scrollPane, BorderLayout.SOUTH); // Add the score history area to the bottom
 
-        setVisible(true);
+        setVisible(true); // Make the window visible
     }
 
-    public void updateScore(int score) {
-        currentScoreLabel.setText("Current Score: " + score);
+    public void updateScore(int score) { // Method to update the current score
+        currentScoreLabel.setText("Current Score: " + score); // Update the score label
     }
 
-    public void updateScoreHistory(int score) {
-        String playerName = nameField.getText().trim();
-        if (playerName.isEmpty()) {
+    public void updateScoreHistory(int score) { // Method to update the score history
+        String playerName = nameField.getText().trim(); // Get the player's name
+        if (playerName.isEmpty()) { // If the name is empty, use "Anonymous"
             playerName = "Anonymous";
         }
-        scoreHistoryArea.append(playerName + ": " + score + "\n");
+        scoreHistoryArea.append(playerName + ": " + score + "\n"); // Append the score to the history
     }
 
-    public void disableButtons() {
-        for (JButton button : colorButtons) {
-            button.setEnabled(false);
+    public void disableButtons() { // Method to disable all color buttons
+        for (JButton button : colorButtons) { // Loop through the buttons
+            button.setEnabled(false); // Disable each button
         }
     }
 
-    public void enableButtons() {
-        for (JButton button : colorButtons) {
-            button.setEnabled(true);
+    public void enableButtons() { // Method to enable all color buttons
+        for (JButton button : colorButtons) { // Loop through the buttons
+            button.setEnabled(true); // Enable each button
         }
     }
 
-    public void highlightButton(String color) {
-        for (JButton button : colorButtons) {
-            if (button.getText().equals(color)) {
-                button.setBackground(Color.WHITE); // Highlight by changing color
-                Timer timer = new Timer(500, e -> {
-                    button.setBackground(getButtonColor(color)); // Revert to original color
+    public void highlightButton(String color) { // Method to highlight a button
+        for (JButton button : colorButtons) { // Loop through the buttons
+            if (button.getText().equals(color)) { // Find the button with the matching color
+                button.setBackground(Color.WHITE); // Highlight the button by changing its color
+                Timer timer = new Timer(500, e -> { // Create a timer to revert the color
+                    button.setBackground(getButtonColor(color)); // Revert to the original color
                 });
-                timer.setRepeats(false);
-                timer.start();
-                break;
+                timer.setRepeats(false); // Ensure the timer only runs once
+                timer.start(); // Start the timer
+                break; // Exit the loop
             }
         }
     }
 
-    private Color getButtonColor(String color) {
-        switch (color) {
-            case "Red": return Color.RED;
-            case "Green": return Color.GREEN;
-            case "Blue": return Color.BLUE;
-            case "Yellow": return Color.YELLOW;
-            default: return Color.BLACK;
+    private Color getButtonColor(String color) { // Method to get the original color of a button
+        switch (color) { // Switch based on the color name
+            case "Red": return Color.RED; // Return red for "Red"
+            case "Green": return Color.GREEN; // Return green for "Green"
+            case "Blue": return Color.BLUE; // Return blue for "Blue"
+            case "Yellow": return Color.YELLOW; // Return yellow for "Yellow"
+            default: return Color.BLACK; // Default to black (should not happen)
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new SimonGame());
+    public static void main(String[] args) { // Main method to start the application
+        SwingUtilities.invokeLater(() -> new SimonGame()); // Create the SimonGame instance on the event dispatch thread
     }
 }
